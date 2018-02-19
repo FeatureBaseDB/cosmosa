@@ -40,20 +40,20 @@ You can run this from the server you set up, or somewhere else that you have Go
 installed. First set up three environment variables using the appropriate values
 from the CosmosDB you set up:
 
-#+BEGIN_SRC bash
+```bash
 export AZURE_COSMOS_ACCOUNT="mydbacc"
 export AZURE_DATABASE="mynewdb"
 export AZURE_DATABASE_PASSWORD="Ldlkfwoiu384b23ljh4f089s89ueorihj3h4jkhs09023845ht9s8duf023hjsv084ytblpt28234=="
-#+END_SRC
+```
 
 Now, install and run `cosmosla` to set up the appropriate collection in CosmosDB.
 
-#+BEGIN_SRC bash
+```bash
 go get github.com/jaffee/cosmosla
 cd $GOPATH/github.com/jaffee/cosmosla
 go install
 cosmosla -just-create
-#+END_SRC
+```
 
 The `-just-create` flag tells `cosmosla` not to write any data or make any
 queries, but just create a collection in your CosmosDB database. We'll set up
@@ -64,12 +64,12 @@ the rest of our infrastructure and then come back to this.
 You may want to do this in screen or tmux so that you can easily come back to it
 if your ssh session dies.
 
-#+BEGIN_SRC bash
+```bash
 git clone https://github.com/pilosa/pilosa.git $GOPATH/src/github.com/pilosa/pilosa
 cd $GOPATH/src/github.com/pilosa/pilosa
 make install
 pilosa server
-#+END_SRC
+```
 
 Pilosa should now be running and listening on `localhost:10101`. 
 
@@ -77,13 +77,13 @@ Pilosa should now be running and listening on `localhost:10101`.
 
 Again, a terminal multiplexer such as screen or tmux could be helpful here.
 
-#+BEGIN_SRC bash
+```bash
 git clone https://github.com/pilosa/pdk.git $GOPATH/src/github.com/pilosa/pdk
 cd $GOPATH/src/github.com/pilosa/pdk
 git checkout origin/generic-improvements
 make install
 pdk http --subjecter.path="id" --framer.collapse='$v' --framer.ignore='$t,_id,_rid,_self,_etag,_attachments,_ts,_lsn' --batch-size=50000 --bind="$HOST:$BIND" --proxy="$HOST:$PROXY"
-#+END_SRC
+```
 
 The various arguments to `pdk http` are described by `pdk http -h`. The PDK should now be listening for HTTP POST requests on `$HOST:$BIND` and listening for queries to proxy to Pilosa on `$HOST:$PROXY` (more on this later).
 
@@ -105,7 +105,7 @@ The various arguments to `pdk http` are described by `pdk http -h`. The PDK shou
 13. Paste the following C# code into the editor (remember to swap $HOST and $BIND), then save and run!
 
 
-#+BEGIN_SRC C#
+```C#
 #r "Microsoft.Azure.Documents.Client"
 using System;
 using System.Collections.Generic;
@@ -127,15 +127,15 @@ public static void Run(IReadOnlyList<Document> documents, TraceWriter log) {
        }
    }
 }
-#+END_SRC
+```
 
 
 ### Writing Data!
 Go back to wherever you installed `cosmosla` earlier on, now we can start writing data.
 
-#+BEGIN_SRC bash
+```bash
 cosmosla -insert -num 10000
-#+END_SRC
+```
 
 This will probably take around 20 minutes. If all is going well, you should
 start to see Pilosa logging about imports and snapshotting. You can also view
@@ -144,7 +144,7 @@ the Azure portal.
 
 `cosmosla` is inserting documents into CosmosDB which look like:
 
-#+BEGIN_SRC json
+```json
 {
   "alive": "yes",
   "tiles": {
@@ -155,16 +155,16 @@ the Azure portal.
     ... # several hundred more
   }
 }
-#+END_SRC
+```
 
 This structure is somewhat arbitrary, and could just as well be:
 
-#+BEGIN_SRC json
+```json
 {
   "alive": "yes",
   "tiles": ["p1", "dkeu", "szy", "1z"...],
 }
-#+END_SRC
+```
 
 It would end up being indexed the same way in Pilosa, but I didn't know off the
 top of my head how to construct the same query in Mongo's query language in that
@@ -178,30 +178,30 @@ more likely to appear than the rest.
 `cosmosla` has a `-query` flag which will cause it to run some predefined
 queries, and output how long each one took.
 
-#+BEGIN_SRC bash
+```bash
 cosmosla -query
-#+END_SRC
+```
 
 Pay particular attention to the "intersect 3 count" line.
 
 To run that same query against Pilosa, do
 
-#+BEGIN_SRC bash
+```bash
 time curl $HOST:$PROXY/index/jsonhttp/query -d'Count(Intersect(Bitmap(frame=tiles, rowID=p1), Bitmap(frame=tiles, rowID=jt), Bitmap(frame=tiles, rowID=wy)))'
-#+END_SRC
+```
 
 This is actually querying the proxy server which the PDK is running. It allows you to specify rowIDs as strings (e.g. "p1") rather than the integers which Pilosa knows about.
 
 You can also do a `TopN` query which will show you which tiles appear in the most documents.
 
-#+BEGIN_SRC bash
+```bash
 curl $HOST:$PROXY/index/jsonhttp/query -d'TopN(frame=tiles, n=10)'
-#+END_SRC
+```
 
 And you can even combine the intersection query with the TopN query, which will show you which tiles appear the most in documents which have the specified set of tiles.
 
-#+BEGIN_SRC bash
+```bash
 curl $HOST:$PROXY/index/jsonhttp/query -d'TopN(Intersect(Bitmap(frame=tiles, rowID=p1), Bitmap(frame=tiles, rowID=jt), Bitmap(frame=tiles, rowID=wy)), frame=tiles, n=10)'
-#+END_SRC
+```
 
 Constructing _that_ query in CosmosDB is left as an exercise to the reader :).
