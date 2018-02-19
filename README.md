@@ -50,7 +50,7 @@ Now, install and run `cosmosla` to set up the appropriate collection in CosmosDB
 
 ```bash
 go get github.com/jaffee/cosmosla
-cd $GOPATH/github.com/jaffee/cosmosla
+cd $GOPATH/src/github.com/jaffee/cosmosla
 go install
 cosmosla -just-create
 ```
