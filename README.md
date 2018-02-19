@@ -7,7 +7,7 @@ conjunction with Microsoft's Azure CosmosDB. We describe a demo which includes:
 - running [Pilosa](https://github.com/pilosa/pilosa)
 - querying Pilosa and CosmosDB and comparing the results!
 
-### Before you start.
+### Before you start
 Create an Azure CosmosDB database, and have your CosmosDB account name, resource
 group, database name, and password at the ready.
 
@@ -37,7 +37,7 @@ Please report any issues you encounter here, or to the approriate repository if
 it's clear where the problem is occurring.
 
 You can run this from the server you set up, or somewhere else that you have Go
-installed. First set up three environment variables using the appropriate values
+installed. First set up these environment variables using the appropriate values
 from the CosmosDB you set up:
 
 ```bash
@@ -59,7 +59,7 @@ The `-just-create` flag tells `cosmosla` not to write any data or make any
 queries, but just create a collection in your CosmosDB database. We'll set up
 the rest of our infrastructure and then come back to this.
 
-### Start Pilosa.
+### Start Pilosa
 
 You may want to do this in screen or tmux so that you can easily come back to it
 if your ssh session dies.
@@ -73,7 +73,7 @@ pilosa server
 
 Pilosa should now be running and listening on `localhost:10101`. 
 
-### Install and start PDK.
+### Install and start PDK
 
 Again, a terminal multiplexer such as screen or tmux could be helpful here.
 
@@ -88,7 +88,7 @@ pdk http --subjecter.path="id" --framer.collapse='$v' --framer.ignore='$t,_id,_r
 The various arguments to `pdk http` are described by `pdk http -h`. The PDK should now be listening for HTTP POST requests on `$HOST:$BIND` and listening for queries to proxy to Pilosa on `$HOST:$PROXY` (more on this later).
 
 
-### Create a Function App to process the CosmosDB Change feed.
+### Create a Function App to process the CosmosDB Change feed
 1. `In the Azure portal, click on "+ Create a Resource".
 2. Select "Compute" on the left.
 3. Select "Function App" on the right.
