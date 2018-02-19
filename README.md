@@ -187,7 +187,7 @@ Pay particular attention to the "intersect 3 count" line.
 To run that same query against Pilosa, do
 
 ```bash
-time curl $HOST:$PROXY/index/jsonhttp/query -d'Count(Intersect(Bitmap(frame=tiles, rowID=p1), Bitmap(frame=tiles, rowID=jt), Bitmap(frame=tiles, rowID=wy)))'
+time curl -XPOST $HOST:$PROXY/index/jsonhttp/query -d'Count(Intersect(Bitmap(frame=tiles, rowID=p1), Bitmap(frame=tiles, rowID=jt), Bitmap(frame=tiles, rowID=wy)))'
 ```
 
 This is actually querying the proxy server which the PDK is running. It allows you to specify rowIDs as strings (e.g. "p1") rather than the integers which Pilosa knows about.
@@ -195,13 +195,13 @@ This is actually querying the proxy server which the PDK is running. It allows y
 You can also do a `TopN` query which will show you which tiles appear in the most documents.
 
 ```bash
-curl $HOST:$PROXY/index/jsonhttp/query -d'TopN(frame=tiles, n=10)'
+curl -XPOST $HOST:$PROXY/index/jsonhttp/query -d'TopN(frame=tiles, n=10)'
 ```
 
 And you can even combine the intersection query with the TopN query, which will show you which tiles appear the most in documents which have the specified set of tiles.
 
 ```bash
-curl $HOST:$PROXY/index/jsonhttp/query -d'TopN(Intersect(Bitmap(frame=tiles, rowID=p1), Bitmap(frame=tiles, rowID=jt), Bitmap(frame=tiles, rowID=wy)), frame=tiles, n=10)'
+curl -XPOST $HOST:$PROXY/index/jsonhttp/query -d'TopN(Intersect(Bitmap(frame=tiles, rowID=p1), Bitmap(frame=tiles, rowID=jt), Bitmap(frame=tiles, rowID=wy)), frame=tiles, n=10)'
 ```
 
 Constructing _that_ query in CosmosDB is left as an exercise to the reader :).
