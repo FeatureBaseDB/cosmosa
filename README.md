@@ -34,6 +34,8 @@ Now you need to get your Azure Cosmos DB password. If you have [jq](https://sted
 export COSMOSA_DB_PASSWORD=`az cosmosdb list-keys -g $COSMOSA_GROUP -n $COSMOSA_ACCOUNT | jq .primaryMasterKey`
 ```
 
+### Setting up a host to run Pilosa and the PDK
+
 You'll also need a server or container with a public IP or DNS address which
 you can run Pilosa and the PDK on. A few GB of memory and 2-4 CPU cores should
 be sufficient, and use any popular Linux distribution as the OS. Here we'll
@@ -97,12 +99,13 @@ The `-just-create` flag tells `cosmosa` not to write any data or make any
 queries, but just create a collection in your CosmosDB database. We'll set up
 the rest of our infrastructure and then come back to this.
 
-### Start Pilosa
+### Install and start Pilosa
 
 You may want to do this in screen or tmux so that you can easily come back to it
 if your ssh session dies.
 
 ```bash
+ssh $AZURE_USERNAME@$COSMOSA_HOST
 git clone https://github.com/pilosa/pilosa.git $GOPATH/src/github.com/pilosa/pilosa
 cd $GOPATH/src/github.com/pilosa/pilosa
 git checkout origin/cluster-resize
@@ -117,6 +120,7 @@ Pilosa should now be running and listening on `localhost:10101`.
 Again, a terminal multiplexer such as screen or tmux could be helpful here.
 
 ```bash
+ssh $AZURE_USERNAME@$COSMOSA_HOST
 git clone https://github.com/pilosa/pdk.git $GOPATH/src/github.com/pilosa/pdk
 cd $GOPATH/src/github.com/pilosa/pdk
 git checkout origin/cluster-resize-support
