@@ -5,7 +5,7 @@ export AZURE_USERNAME=`whoami`
 
 ssh $AZURE_USERNAME@$COSMOSA_HOST "printf \"export COSMOSA_HOST=$COSMOSA_HOST\nexport COSMOSA_BIND=$COSMOSA_BIND\nexport COSMOSA_PROXY=$COSMOSA_PROXY\nexport COSMOSA_DB_PASSWORD=$COSMOSA_DB_PASSWORD\nexport COSMOSA_DB=$COSMOSA_DB\nexport COSMOSA_ACCOUNT=$COSMOSA_ACCOUNT\" >> .profile"
 
-ssh $AZURE_USERNAME@$COSMOSA_HOST '
+ssh $AZURE_USERNAME@$COSMOSA_HOST 'export ME=`whoami`
 wget https://storage.googleapis.com/golang/go1.10.linux-amd64.tar.gz
 sudo tar -C /usr/local -xzf go1.10.linux-amd64.tar.gz
 sudo chown -R $ME:$ME /usr/local/go
@@ -16,7 +16,6 @@ export GOPATH
 PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 export PATH
 
-export ME=`whoami`
 echo "export GOPATH=/home/$ME/go" >> .profile
 echo "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" >> .profile
 
