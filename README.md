@@ -1,11 +1,11 @@
 This repository contains instructions and resources for running Pilosa in
-conjunction with Microsoft's Azure CosmosDB. We describe a demo which includes:
+conjunction with Microsoft's Azure Cosmos DB. We describe a demo which includes:
 
-- generating data and writing it to CosmosDB.
-- creating a Function App to process the CosmosDB change feed
+- generating data and writing it to Cosmos DB.
+- creating a Function App to process the Cosmos DB change feed
 - running `pdk http` from the [PDK](https://github.com/pilosa/pdk) to receive the change feed and index it in Pilosa.
 - running [Pilosa](https://github.com/pilosa/pilosa)
-- querying Pilosa and CosmosDB and comparing the results!
+- querying Pilosa and Cosmos DB and comparing the results!
 
 ### Before you start
 Make sure you have an Azure account and can log in to the Azure web portal. Then, [install the azure CLI tool.](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
@@ -13,8 +13,8 @@ Make sure you have an Azure account and can log in to the Azure web portal. Then
 We also recommend installing [jq](https://stedolan.github.io/jq/) which will
 make following along a bit easier.
 
-### Setting up CosmosDB
-Create an Azure CosmosDB database, and have your CosmosDB account name, resource
+### Setting up Cosmos DB
+Create an Azure Cosmos DB database, and have your Cosmos DB account name, resource
 group, database name, and password at the ready.
 
 ```bash
@@ -72,7 +72,7 @@ export AZURE_USERNAME=`whoami`
 Ensure that `git` and `make` are installed on your server (`setupHost.sh` takes
 care of this).
 
-### Setting up cosmosa to write to CosmosDB
+### Setting up cosmosa to write to Cosmos DB
 If you wish to directly replicate our experiment, please use the rather hastily
 written [Cosmosa](https://github.com/pilosa/cosmosa) which is in this repository.
 
@@ -96,7 +96,7 @@ cosmosa -just-create
 ```
 
 The `-just-create` flag tells `cosmosa` not to write any data or make any
-queries, but just create a collection in your CosmosDB database. We'll set up
+queries, but just create a collection in your Cosmos DB database. We'll set up
 the rest of our infrastructure and then come back to this.
 
 ### Install and start Pilosa
@@ -131,7 +131,7 @@ pdk http --subjecter.path="id" --framer.collapse='$v' --framer.ignore='$t,_id,_r
 The various arguments to `pdk http` are described by `pdk http -h`. The PDK should now be listening for HTTP POST requests on `$COSMOSA_HOST:$COSMOSA_BIND` and listening for queries to proxy to Pilosa on `$COSMOSA_HOST:$COSMOSA_PROXY` (more on this later).
 
 
-### Create a Function App to process the CosmosDB Change feed
+### Create a Function App to process the Cosmos DB Change feed
 1. `In the Azure portal, click on "+ Create a Resource".
 2. Select "Compute" on the left.
 3. Select "Function App" on the right.
@@ -140,7 +140,7 @@ The various arguments to `pdk http` are described by `pdk http -h`. The PDK shou
 6. Select "pin to dashboard" for convenience
 7. Click "create".
 8. Click your Function App once it's done creating.
-9. Hit the "+" next to "Functions" and find "CosmosDB trigger"
+9. Hit the "+" next to "Functions" and find "Cosmos DB trigger"
 10. Select C# as the language.
 11. Click "new" next to "Azure Cosmos DB account connection", and select the account you created in the popup.
 12. Enter the value of $COSMOSA_DB for "Database name".
@@ -180,14 +180,14 @@ cosmosa -insert -num 10000
 
 At this point, you may need to go to the overview for the Function App in the
 Azure Portal and click restart. I've had some difficulty in reliably getting
-change feed data from CosmosDB in the Function App.
+change feed data from Cosmos DB in the Function App.
 
 This will probably take around 20 minutes. If all is going well, you should
 start to see Pilosa logging about imports and snapshotting. You can also view
-the logs for your function app, and explore the data going into CosmosDB through
+the logs for your function app, and explore the data going into Cosmos DB through
 the Azure portal.
 
-`cosmosa` is inserting documents into CosmosDB which look like:
+`cosmosa` is inserting documents into Cosmos DB which look like:
 
 ```json
 {
@@ -245,7 +245,7 @@ And you can even combine the intersection query with the TopN query, which will 
 curl -XPOST $COSMOSA_HOST:$COSMOSA_PROXY/index/jsonhttp/query -d'TopN(Intersect(Bitmap(frame=tiles, rowID=p1), Bitmap(frame=tiles, rowID=jt), Bitmap(frame=tiles, rowID=wy)), frame=tiles, n=10)'
 ```
 
-Constructing _that_ query in CosmosDB is left as an exercise to the reader :).
+Constructing _that_ query in Cosmos DB is left as an exercise to the reader :).
 
 ### Clean Up
 Azure makes this really easy! I believe this will delete everything we just did in Azure:
