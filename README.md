@@ -135,17 +135,18 @@ The various arguments to `pdk http` are described by `pdk http -h`. The PDK shou
 1. `In the Azure portal, click on "+ Create a Resource".
 2. Select "Compute" on the left.
 3. Select "Function App" on the right.
-4. Enter a name. 
+4. Enter a name.
 5. Use the existing resource group of your Cosmos DB database.
-6. Select "pin to dashboard" for convenience
+6. Select "pin to dashboard" for convenience.
 7. Click "create".
 8. Click your Function App once it's done creating.
-9. Hit the "+" next to "Functions" and find "Cosmos DB trigger"
-10. Select C# as the language.
-11. Click "new" next to "Azure Cosmos DB account connection", and select the account you created in the popup.
-12. Enter the value of $COSMOSA_DB for "Database name".
-13. Click "Create"
-14. Paste the following C# code into the editor (remember to swap $COSMOSA_HOST and $COSMOSA_BIND), then save and run!
+9. Hit the "+" next to "Functions" and find "Cosmos DB trigger".
+10. Click "Custom function" under "Get started on your own".
+11. Select C# as the language.
+12. Click "new" next to "Azure Cosmos DB account connection", and select the account you created in the popup.
+13. Enter the value of $COSMOSA_DB for "Database name".
+14. Click "Create".
+15. Paste the following C# code into the editor (remember to swap $COSMOSA_HOST and $COSMOSA_BIND), then save and run!
 
 ```C#
 #r "Microsoft.Azure.Documents.Client"
