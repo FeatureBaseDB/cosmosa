@@ -38,7 +38,7 @@ ssh $COSMOSA_HOST 'nohup ./go/bin/pilosa server --data-dir=./pilosadata1 &> pilo
 ssh $COSMOSA_HOST "nohup ./go/bin/pdk http --subjecter.path=\"id\" --framer.collapse=\"$v\" --framer.ignore=\"$t,_id,_rid,_self,_etag,_attachments,_ts,_lsn\" --batch-size=100000 --bind=$COSMOSA_HOST:$COSMOSA_BIND --proxy=$COSMOSA_HOST:$COSMOSA_PROXY &> pdk.log &"
 
 # re-create "people" collection
-cosmosla -just-create
+cosmosa -just-create
 
 echo "Collection has been deleted and recreated - sleeping for 20 seconds - restart Function App now!"
 sleep 20
@@ -46,4 +46,4 @@ sleep 20
 # Now restart the Function App in the Azure Portal
 
 # start inserting records
-cosmosla -insert -num 10000
+cosmosa -insert -num 10000
