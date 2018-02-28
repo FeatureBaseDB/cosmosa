@@ -34,14 +34,7 @@ Now you need to get your Azure Cosmos DB password. If you have [jq](https://sted
 export COSMOSA_DB_PASSWORD=`az cosmosdb list-keys -g $COSMOSA_GROUP -n $COSMOSA_ACCOUNT | jq .primaryMasterKey`
 ```
 
-Otherwise do:
-```bash
-az cosmosdb list-keys -g $COSMOSA_GROUP -n $COSMOSA_ACCOUNT
-# then copy the primary master key and do
-export COSMOSA_DB_PASSWORD="<primaryMasterKey>"
-```
-
-You'll also need a server or container with a public IP or DNS address on which
+You'll also need a server or container with a public IP or DNS address which
 you can run Pilosa and the PDK on. A few GB of memory and 2-4 CPU cores should
 be sufficient, and use any popular Linux distribution as the OS. Here we'll
 create a host in Azure and save its public IP in `COSMOSA_HOST`. 
@@ -70,7 +63,7 @@ environment variables, and install Go - if your Azure username is not the same
 as your local username, be sure to set the variable first.
 
 ```bash
-export AZURE_USERNAME=myusername
+export AZURE_USERNAME=<myusername>
 ./setupHost.sh
 ```
 
