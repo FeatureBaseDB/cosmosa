@@ -63,7 +63,7 @@ environment variables, and install Go - if your Azure username is not the same
 as your local username, be sure to set the variable first.
 
 ```bash
-export AZURE_USERNAME=<myusername>
+export AZURE_USERNAME=`whoami`
 ./setupHost.sh
 ```
 
@@ -79,19 +79,13 @@ want to make tweaks to the existing code, we'd highly encourage you to do so.
 Please report any issues you encounter here, or to the approriate repository if
 it's clear where the problem is occurring.
 
-You can run this from the server you set up, or somewhere else that you have Go
-installed. First set up these environment variables using the appropriate values
-from the CosmosDB you set up (`setupHost.sh` takes care of this):
+You can install and run `cosmosa` from the server you set up, or somewhere else
+that you have Go installed. Make sure the environment variables we've set so far
+are in place wherever you decide to run this (`setupHost.sh` takes care of this
+on $COSMOSA_HOST and we assume that for these instructions):
 
 ```bash
-export COMSOSA_ACCOUNT="accountcosmosa"
-export COSMOSA_DB="cosmosa"
-export COSMOSA_DB_PASSWORD="Ldlkfwoiu384b23ljh4f089s89ueorihj3h4jkhs09023845ht9s8duf023hjsv084ytblpt28234=="
-```
-
-Now, install and run `cosmosa` to set up the appropriate collection in CosmosDB.
-
-```bash
+ssh $AZURE_USERNAME@$COSMOSA_HOST
 go get github.com/pilosa/cosmosa
 cd $GOPATH/src/github.com/pilosa/cosmosa
 dep ensure
