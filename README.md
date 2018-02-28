@@ -8,8 +8,24 @@ conjunction with Microsoft's Azure CosmosDB. We describe a demo which includes:
 - querying Pilosa and CosmosDB and comparing the results!
 
 ### Before you start
+Make sure you have an Azure account and can log in to the Azure web portal. Then, [install the azure CLI tool.](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+
+### Setting up CosmosDB
 Create an Azure CosmosDB database, and have your CosmosDB account name, resource
 group, database name, and password at the ready.
+
+```bash
+export COSMOSA_GROUP=cosmosaRG
+export COSMOSA_LOCATION=eastus
+export COSMOSA_ACCOUNT=accountcomosa
+export COSMOSA_DB=cosmosa
+az login
+# you'll have to enter a code on a web page
+az group create --name $COSMOSA_GROUP --location $COSMOSA_LOCATION
+az cosmosdb create -g $COSMOSA_GROUP -n $COSMOSA_ACCOUNT
+az cosmosdb database create -g $COSMOSA_GROUP -n $COSMOSA_ACCOUNT -d $COSMOSA_DB
+
+```
 
 You'll also need a server or container with a public IP or DNS address on which
 you can run Pilosa and the PDK on. A few GB of memory and 2-4 CPU cores should
@@ -27,9 +43,9 @@ GOPATH is set up as instructed, and that `$GOPATH/bin` is on your PATH.
 
 Ensure that `git` and `make` are installed on your server.
 
-### Setting up cosmosla to write to CosmosDB
+### Setting up cosmosa to write to CosmosDB
 If you wish to directly replicate our experiment, please use the rather hastily
-written [Cosmosla](https://github.com/jaffee/cosmosla).
+written [Cosmosa](https://github.com/pilosa/cosmosa) which is in this repository.
 
 That said, if you have a different data set which you'd like to try, or you just
 want to make tweaks to the existing code, we'd highly encourage you to do so.
@@ -41,21 +57,21 @@ installed. First set up these environment variables using the appropriate values
 from the CosmosDB you set up:
 
 ```bash
-export AZURE_COSMOS_ACCOUNT="mydbacc"
-export AZURE_DATABASE="mynewdb"
-export AZURE_DATABASE_PASSWORD="Ldlkfwoiu384b23ljh4f089s89ueorihj3h4jkhs09023845ht9s8duf023hjsv084ytblpt28234=="
+export COMSOSA_ACCOUNT="mydbacc"
+export COSMOSA_DB="mynewdb"
+export COSMOSA_DB_PASSWORD="Ldlkfwoiu384b23ljh4f089s89ueorihj3h4jkhs09023845ht9s8duf023hjsv084ytblpt28234=="
 ```
 
-Now, install and run `cosmosla` to set up the appropriate collection in CosmosDB.
+Now, install and run `cosmosa` to set up the appropriate collection in CosmosDB.
 
 ```bash
-go get github.com/jaffee/cosmosla
-cd $GOPATH/src/github.com/jaffee/cosmosla
+go get github.com/pilosa/cosmosa
+cd $GOPATH/src/github.com/pilosa/cosmosa
 go install
-cosmosla -just-create
+cosmosa -just-create
 ```
 
-The `-just-create` flag tells `cosmosla` not to write any data or make any
+The `-just-create` flag tells `cosmosa` not to write any data or make any
 queries, but just create a collection in your CosmosDB database. We'll set up
 the rest of our infrastructure and then come back to this.
 
@@ -132,10 +148,10 @@ public static void Run(IReadOnlyList<Document> documents, TraceWriter log) {
 
 
 ### Writing Data!
-Go back to wherever you installed `cosmosla` earlier on, now we can start writing data.
+Go back to wherever you installed `cosmosa` earlier on, now we can start writing data.
 
 ```bash
-cosmosla -insert -num 10000
+cosmosa -insert -num 10000
 ```
 
 This will probably take around 20 minutes. If all is going well, you should
@@ -143,7 +159,7 @@ start to see Pilosa logging about imports and snapshotting. You can also view
 the logs for your function app, and explore the data going into CosmosDB through
 the Azure portal.
 
-`cosmosla` is inserting documents into CosmosDB which look like:
+`cosmosa` is inserting documents into CosmosDB which look like:
 
 ```json
 {
@@ -176,11 +192,11 @@ more likely to appear than the rest.
 
 ### Querying
 
-`cosmosla` has a `-query` flag which will cause it to run some predefined
+`cosmosa` has a `-query` flag which will cause it to run some predefined
 queries, and output how long each one took.
 
 ```bash
-cosmosla -query
+cosmosa -query
 ```
 
 Pay particular attention to the "intersect 3 count" line.
