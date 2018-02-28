@@ -248,3 +248,9 @@ curl -XPOST $COSMOSA_HOST:$COSMOSA_PROXY/index/jsonhttp/query -d'TopN(Intersect(
 ```
 
 Constructing _that_ query in CosmosDB is left as an exercise to the reader :).
+
+### Clean Up
+Azure makes this really easy! I believe this will delete everything we just did in Azure:
+```bash
+az group delete -n $COSMOSA_GROUP
+```
