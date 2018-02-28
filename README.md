@@ -84,7 +84,7 @@ it's clear where the problem is occurring.
 You can install and run `cosmosa` from the server you set up, or somewhere else
 that you have Go installed. Make sure the environment variables we've set so far
 are in place wherever you decide to run this (`setupHost.sh` takes care of this
-on $COSMOSA_HOST and we assume that for these instructions):
+on `$COSMOSA_HOST` and we assume that for these instructions):
 
 ```bash
 ssh $AZURE_USERNAME@$COSMOSA_HOST
@@ -144,9 +144,9 @@ The various arguments to `pdk http` are described by `pdk http -h`. The PDK shou
 10. Click "Custom function" under "Get started on your own".
 11. Select C# as the language.
 12. Click "new" next to "Azure Cosmos DB account connection", and select the account you created in the popup.
-13. Enter the value of $COSMOSA_DB for "Database name".
+13. Enter the value of `$COSMOSA_DB` for "Database name".
 14. Click "Create".
-15. Paste the following C# code into the editor (remember to swap $COSMOSA_HOST and $COSMOSA_BIND), then save and run!
+15. Paste the following C# code into the editor (remember to swap `$COSMOSA_HOST` and `$COSMOSA_BIND`), then save and run!
 
 ```C#
 #r "Microsoft.Azure.Documents.Client"
