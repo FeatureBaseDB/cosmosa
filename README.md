@@ -94,7 +94,6 @@ Now, install and run `cosmosa` to set up the appropriate collection in CosmosDB.
 ```bash
 go get github.com/pilosa/cosmosa
 cd $GOPATH/src/github.com/pilosa/cosmosa
-git checkout origin/simplify
 dep ensure
 go install
 cosmosa -just-create
