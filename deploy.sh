@@ -29,7 +29,7 @@ ssh $COSMOSA_HOST 'killall pilosa; rm -rf ./pilosadata1; killall pdk'
 # scp $GOPATH/bin/linux_amd64/pdk $COSMOSA_HOST:
 
 # delete cosmosdb collection for fresh data
-az cosmosdb collection delete -c people -d $COSMOSA_DB -n $COMSOSA_ACCOUNT -g $COSMOSA_GROUP
+az cosmosdb collection delete -c people -d $COSMOSA_DB -n $COSMOSA_ACCOUNT -g $COSMOSA_GROUP
 
 # restart pilosa
 ssh $COSMOSA_HOST 'nohup ./go/bin/pilosa server --data-dir=./pilosadata1 &> pilosa.log &'
