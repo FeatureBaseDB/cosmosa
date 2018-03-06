@@ -78,7 +78,7 @@ written [Cosmosa](https://github.com/pilosa/cosmosa) which is in this repository
 
 That said, if you have a different data set which you'd like to try, or you just
 want to make tweaks to the existing code, we'd highly encourage you to do so.
-Please report any issues you encounter here, or to the approriate repository if
+Please report any issues you encounter here, or to the appropriate repository if
 it's clear where the problem is occurring.
 
 You can install and run `cosmosa` from the server you set up, or somewhere else
